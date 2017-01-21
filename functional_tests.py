@@ -6,33 +6,45 @@
 # @Software: PyCharm
 
 from selenium import webdriver
+import unittest
 
-browser = webdriver.Chrome()
 
-# 打开应用首页
-browser.get('http://localhost:8000')
+class NewVisitorTest(unittest.TestCase):
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+        self.browser.implicitly_wait(3)
 
-# 网页的标题和头部都包含“To-Do”这个词
-assert 'To-Do' in browser.title
+    def tearDown(self):
+        self.browser.quit()
 
-# 应用邀请输入一个待办事项
+    def test_can_start_a_list_and_retrive_it_later(self):
+        # 打开应用首页
+        self.browser.get('http://localhost:8000')
 
-# 在文本框输入“Buy peacock feathers”
+        # 网页的标题和头部都包含“To-Do”这个词
+        self.assertIn('To-Do', self.browser.title)
+        self.fail('Finish the test!')
 
-# 按下回车页面更新
-# 待办事项表格中显示了“1:Buy peacock feathers”
+        # 应用邀请输入一个待办事项
 
-# 页面中又显示了一个文本框，可以输入其他待办事项
-# 输入“Use peacock feathers to make a fly”
+        # 在文本框输入“Buy peacock feathers”
 
-# 页面再次更新，清单中显示了这两个待办事项
+        # 按下回车页面更新
+        # 待办事项表格中显示了“1:Buy peacock feathers”
 
-# 想知道网站是否会记住这个清单
-# 网站生成了一个唯一的URL
-# 而且页面中有一些文字解说这个功能
+        # 页面中又显示了一个文本框，可以输入其他待办事项
+        # 输入“Use peacock feathers to make a fly”
 
-# 访问了这个URL，发现待办事项列表还在
+        # 页面再次更新，清单中显示了这两个待办事项
 
-# 离开
+        # 想知道网站是否会记住这个清单
+        # 网站生成了一个唯一的URL
+        # 而且页面中有一些文字解说这个功能
 
-browser.quit()
+        # 访问了这个URL，发现待办事项列表还在
+
+        # 离开
+
+
+if __name__ == '__main__':
+    unittest.main()
