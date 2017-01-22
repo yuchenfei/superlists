@@ -80,7 +80,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # 用户b获得了他的唯一URL
         francis_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/list/.+')
+        self.assertRegex(francis_list_url, '/lists/.+')
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         # 此页面也没有用户a的清单

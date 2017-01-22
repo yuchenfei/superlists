@@ -21,4 +21,5 @@ from lists import views as app_lists_views
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^$', app_lists_views.home_page, name='home'),
+    url(r'^lists/the-only-list-in-the-world/$', app_lists_views.view_list, name='view_list')
 ]
