@@ -24,7 +24,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def test_can_start_a_list_and_retrive_it_later(self):
-        # 打开应用首页
+        # 用户a打开应用首页
         self.browser.get(self.live_server_url)
 
         # 网页的标题和头部都包含“To-Do”这个词
@@ -32,7 +32,7 @@ class NewVisitorTest(LiveServerTestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
-        # 应用邀请输入一个待办事项
+        # 应用邀请用户a输入一个待办事项
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(
             inputbox.get_attribute('placeholder'),
@@ -42,9 +42,11 @@ class NewVisitorTest(LiveServerTestCase):
         # 在文本框输入“Buy peacock feathers”
         inputbox.send_keys('Buy peacock feathers')
 
-        # 按下回车页面更新
-        # 待办事项表格中显示了“1:Buy peacock feathers”
+        # 按下回车页面更新,进入一个新的URL
+        # 在这个页面的待办事项清单中显示了“1:Buy peacock feathers”
         inputbox.send_keys(Keys.ENTER)
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         # 页面中又显示了一个文本框，可以输入其他待办事项
@@ -57,11 +59,33 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
-        # 想知道网站是否会记住这个清单
-        # 网站生成了一个唯一的URL
-        # 而且页面中有一些文字解说这个功能
-        self.fail('Finish the test!')
+        # 现在另一新用户b访问了网站
 
-        # 访问了这个URL，发现待办事项列表还在
+        # *使用新的浏览器会话
+        # *确保用户a信息不会从cookie中泄露出来
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        # 新用户b访问了首页
+        # 页面中看不到用户a的清单
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # 用户b输入一个新的待办事项，新建一个清单
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # 用户b获得了他的唯一URL
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/list/.+')
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # 此页面也没有用户a的清单
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
 
         # 离开
