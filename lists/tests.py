@@ -8,22 +8,27 @@ from lists.models import Item
 import re
 
 
-class NewListTest(TestCase):
-    def test_saving_a_POST_request(self):
-        self.client.post(
-            '/lists/new',
-            data={'item_text': 'A new list item'}
-        )
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, 'A new list item')
+class HomePageTest(TestCase):
+    @staticmethod
+    def remove_csrf(html_code):
+        csrf_regex = r'<input[^>]+csrfmiddlewaretoken[^>]+>'
+        return re.sub(csrf_regex, '', html_code)
 
-    def test_redirects_after_POST(self):
-        response = self.client.post(
-            '/lists/new',
-            data={'item_text': 'A new list item'}
+    def assertEqualExceptCSRF(self, html_code1, html_code2):
+        return self.assertEqual(
+            self.remove_csrf(html_code1),
+            self.remove_csrf(html_code2)
         )
-        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
+
+    def test_root_url_resolves_to_home_page_view(self):
+        found = resolve('/')
+        self.assertEqual(found.func, home_page)
+
+    def test_home_page_returns_correct_html(self):
+        request = HttpRequest()
+        response = home_page(request)
+        expected_html = render_to_string('home.html')  # 因csrf_token报错,使用自定义方法解决
+        self.assertEqualExceptCSRF(response.content.decode(), expected_html)
 
 
 class ListViewTest(TestCase):
@@ -60,24 +65,19 @@ class ItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'Item the second')
 
 
-class HomePageTest(TestCase):
-    @staticmethod
-    def remove_csrf(html_code):
-        csrf_regex = r'<input[^>]+csrfmiddlewaretoken[^>]+>'
-        return re.sub(csrf_regex, '', html_code)
-
-    def assertEqualExceptCSRF(self, html_code1, html_code2):
-        return self.assertEqual(
-            self.remove_csrf(html_code1),
-            self.remove_csrf(html_code2)
+class NewListTest(TestCase):
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/lists/new',
+            data={'item_text': 'A new list item'}
         )
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new list item')
 
-    def test_root_url_resolves_to_home_page_view(self):
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-    def test_home_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = home_page(request)
-        expected_html = render_to_string('home.html')  # 因csrf_token报错,使用自定义方法解决
-        self.assertEqualExceptCSRF(response.content.decode(), expected_html)
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/lists/new',
+            data={'item_text': 'A new list item'}
+        )
+        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
