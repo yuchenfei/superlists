@@ -13,7 +13,7 @@ class ItemValidationTest(FunctionalTest):
         # 用户访问了首页，不小行提交了一个空待办事项
         # 输入框中没有输入内容，他就按下了回车键
         self.browser.get(self.server_url)
-        self.browser.find_element_by_id('id_new_item').send_keys('\n')
+        self.get_item_input_box().send_keys('\n')
 
         # 首页刷新了，显示了一个错误消息
         # 提示待办事项不能为空
@@ -21,11 +21,11 @@ class ItemValidationTest(FunctionalTest):
         self.assertEqual(error.text, "You can't have an empty list item")
 
         # 他输入了一些文字，然后再次提交，这次没问题了
-        self.browser.find_element_by_id('id_new_item').send_keys('Buy milk\n')
+        self.get_item_input_box().send_keys('Buy milk\n')
         self.check_for_row_in_list_table('1: Buy milk')
 
         # 他又提交了一个空待办事项
-        self.browser.find_element_by_id('id_new_item').send_keys('\n')
+        self.get_item_input_box().send_keys('\n')
 
         # 在清单页面他看到了一个类似的错误消息
         self.check_for_row_in_list_table('1: Buy milk')
@@ -33,6 +33,6 @@ class ItemValidationTest(FunctionalTest):
         self.assertEqual(error.text, "You can't have an empty list item")
 
         # 输入文字之后就没问题了
-        self.browser.find_element_by_id('id_new_item').send_keys('Make tea\n')
+        self.get_item_input_box().send_keys('Make tea\n')
         self.check_for_row_in_list_table('1: Buy milk')
         self.check_for_row_in_list_table('2: Make tea')
