@@ -6,30 +6,18 @@ from django.utils.html import escape
 
 from lists.views import home_page
 from lists.models import Item, List
+from lists.forms import ItemForm
 import re
 
 
 class HomePageTest(TestCase):
-    @staticmethod
-    def remove_csrf(html_code):
-        csrf_regex = r'<input[^>]+csrfmiddlewaretoken[^>]+>'
-        return re.sub(csrf_regex, '', html_code)
+    def test_home_page_renders_home_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
 
-    def assertEqualExceptCSRF(self, html_code1, html_code2):
-        return self.assertEqual(
-            self.remove_csrf(html_code1),
-            self.remove_csrf(html_code2)
-        )
-
-    def test_root_url_resolves_to_home_page_view(self):
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-    def test_home_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = home_page(request)
-        expected_html = render_to_string('home.html')  # 因csrf_token报错,使用自定义方法解决
-        self.assertEqualExceptCSRF(response.content.decode(), expected_html)
+    def test_home_page_user_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
 
 
 class ListViewTest(TestCase):
