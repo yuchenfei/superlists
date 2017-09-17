@@ -17,9 +17,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from lists import views as lists_view, urls as lists_urls
+from accounts import urls as accounts_urls
+
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^$', lists_view.home_page, name='home'),
     url(r'^lists/', include(lists_urls)),
+    url(r'^accounts/', include(accounts_urls)),
 ]
