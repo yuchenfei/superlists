@@ -20,7 +20,7 @@ class LoginTest(FunctionalTest):
         # 用户进入网站主页
         # 看到导航栏有登陆区域
         # 用户输入了邮箱地址
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.find_element_by_name('email').send_keys(TEST_EMAIL)
         self.browser.find_element_by_name('email').send_keys(Keys.ENTER)
 
@@ -41,7 +41,7 @@ class LoginTest(FunctionalTest):
         if not url_search:
             self.fail(f'Could not find url in email body:\n{email.body}')
         url = url_search.group(0)
-        self.assertIn(self.live_server_url, url)
+        self.assertIn(self.server_url, url)
 
         # 用户点击了该链接
         self.browser.get(url)
