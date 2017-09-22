@@ -123,9 +123,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.139.com'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = '13962133011@139.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'yuchenfei19950319@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 LOGGING = {
