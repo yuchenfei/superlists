@@ -38,7 +38,7 @@ class FunctionalTest(StaticLiveServerTestCase):
                 cls.live_server_url = ''  # 解决报错
                 return
         super().setUpClass()
-        cls.server_url = cls.live_server_url
+        cls.server_url = cls.live_server_url  # 本地测试时，livw_server_url会被自动填充
 
     @classmethod
     def tearDownClass(cls):
@@ -47,11 +47,10 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
-        self.staging_server = os.environ.get('STAGING_SERVER')
-        if self.staging_server:
-            self.live_server_url = 'http://' + self.staging_server
+        self.browser.implicitly_wait(3)
 
     def tearDown(self):
+        self.browser.refresh()
         self.browser.quit()
 
     def get_item_input_box(self):

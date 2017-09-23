@@ -32,7 +32,7 @@ class LoginTest(FunctionalTest):
             inbox.quit()
 
     def wait_for_email(self, test_email, subject):
-        if not self.staging_server:
+        if not self.live_server_url == '':  # live_server_url非空，说明在本地进行功能测试
             email = mail.outbox[0]
             self.assertIn(test_email, email.to)
             self.assertEqual(email.subject, subject)
@@ -40,7 +40,7 @@ class LoginTest(FunctionalTest):
 
         start = time.time()
 
-        while time.time() - start < 120:
+        while time.time() - start < 60:
             with self.pop_inbox() as inbox:
                 # 获取最新的10封邮件
                 count, _ = inbox.stat()
@@ -58,12 +58,12 @@ class LoginTest(FunctionalTest):
         # 用户进入网站主页
         # 看到导航栏有登陆区域
         # 用户输入了邮箱地址
-        if self.staging_server:
+        if self.live_server_url == '':
             test_email = '954833373@qq.com'
         else:
             test_email = 'edith@example.com'
 
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.find_element_by_name('email').send_keys(test_email)
         self.browser.find_element_by_name('email').send_keys(Keys.ENTER)
 
@@ -82,7 +82,7 @@ class LoginTest(FunctionalTest):
         if not url_search:
             self.fail(f'Could not find url in email body:\n{body}')
         url = url_search.group(0)
-        self.assertIn(self.live_server_url, url)
+        self.assertIn(self.server_url, url)
 
         # 用户点击了该链接
         self.browser.get(url)
