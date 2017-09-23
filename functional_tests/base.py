@@ -12,6 +12,8 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
+from .server_tools import reset_database
+
 MAX_WAIT = 5
 
 
@@ -47,6 +49,8 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
+        if self.live_server_url == '':
+            reset_database(self.server_url)
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
