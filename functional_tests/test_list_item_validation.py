@@ -12,7 +12,7 @@ class ItemValidationTest(FunctionalTest):
     def test_cannot_add_empty_list_items(self):
         # 用户访问了首页，不小行提交了一个空待办事项
         # 输入框中没有输入内容，他就按下了回车键
-        self.browser.get(self.server_url)
+        self.browser.get(self.live_server_url)
         self.get_item_input_box().send_keys(' \n')
 
         # 首页刷新了，显示了一个错误消息
@@ -40,7 +40,7 @@ class ItemValidationTest(FunctionalTest):
     def test_cannot_add_duplicate_items(self):
         pass
         # 用户访问首页，创建了一个清单
-        self.browser.get(self.server_url)
+        self.browser.get(self.live_server_url)
         self.get_item_input_box().send_keys('Buy wellies\n')
         self.wait_for_row_in_list_table('1: Buy wellies')
 
@@ -54,7 +54,7 @@ class ItemValidationTest(FunctionalTest):
 
     def test_error_message_are_cleared_on_input(self):
         # 新建一个清单，但方法不当，出现了一个验证错误
-        self.browser.get(self.server_url)
+        self.browser.get(self.live_server_url)
         self.get_item_input_box().send_keys(' \n')
         error = self.get_error_element()
         self.assertTrue(error.is_displayed())

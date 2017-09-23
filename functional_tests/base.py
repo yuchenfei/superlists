@@ -7,7 +7,6 @@
 import time
 import sys
 
-import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
@@ -34,23 +33,24 @@ def wait(fn):
 class FunctionalTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
+        cls.staging_server = None
         for arg in sys.argv:
             if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                cls.live_server_url = ''  # 解决报错
+                cls.staging_server = arg.split('=')[1]
+                cls.live_server_url = 'http://' + cls.staging_server
                 return
         super().setUpClass()
-        cls.server_url = cls.live_server_url  # 本地测试时，livw_server_url会被自动填充
 
     @classmethod
     def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
+        if not cls.staging_server:
             super().tearDownClass()
 
     def setUp(self):
         self.browser = webdriver.Chrome()
-        if self.live_server_url == '':
-            reset_database(self.server_url)
+        if self.staging_server:
+            pass
+            reset_database(self.staging_server)
         self.browser.implicitly_wait(3)
 
     def tearDown(self):

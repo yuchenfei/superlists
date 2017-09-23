@@ -11,7 +11,7 @@ from .base import FunctionalTest
 class LayoutAndStylingTest(FunctionalTest):
     def test_layout_and_styling(self):
         # 访问首页
-        self.browser.get(self.server_url)
+        self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
 
         # 看到输入框完美居中显示
