@@ -1,9 +1,11 @@
 from fabric.context_managers import settings
-from fabric.api import run
+from fabric.api import env, run
+
+env.key_filename = ["C:\\Users\\yuchenfei\\.ssh\\aliyun_qd"]
 
 
 def _get_manage_dot_py(host):
-    return f'~/sites/{host}virtualenv/bin/python ~/sites/{host}source/manage.py'
+    return f'~/sites/{host}/virtualenv/bin/python ~/sites/{host}/source/manage.py'
 
 
 def reset_database(host):
