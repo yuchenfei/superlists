@@ -4,6 +4,7 @@
 # @Author  : yuchenfei
 # @File    : base.py
 # @Software: PyCharm
+from time import sleep
 
 from .base import FunctionalTest
 from selenium import webdriver
@@ -29,6 +30,7 @@ class NewVisitorTest(FunctionalTest):
 
         # 在文本框输入“Buy peacock feathers”
         inputbox.send_keys('Buy peacock feathers')
+        sleep(0.5)
 
         # 按下回车页面更新,进入一个新的URL
         # 在这个页面的待办事项清单中显示了“1:Buy peacock feathers”
