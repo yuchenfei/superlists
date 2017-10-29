@@ -48,7 +48,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             super().tearDownClass()
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         if self.staging_server:
             reset_database(self.staging_server)
         self.browser.implicitly_wait(3)
