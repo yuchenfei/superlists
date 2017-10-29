@@ -44,7 +44,7 @@ class ItemModelTest(TestCase):
 class ListModelTest(TestCase):
     def test_get_absolute_url(self):
         list_ = List.objects.create()
-        self.assertEqual(list_.get_absolute_url(), f'/lists/{list_.id}/')
+        self.assertEqual(list_.get_absolute_url(), '/lists/{}/'.format(list_.id))
 
     def test_create_new_creates_list_and_first_item(self):
         List.create_new(first_item_text='new item text')
