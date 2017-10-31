@@ -123,11 +123,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'yuchenfei19950319@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = os.environ.get('ACCESS_KEY')
+MAILGUN_SERVER_NAME = os.environ.get('SERVER_NAME')
 
 LOGGING = {
     'version': 1,
