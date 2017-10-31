@@ -24,7 +24,7 @@
 
 * 参考gunicorn-supervisor.template.conf
 * 把SITENAME替换成所需的域名，例如staging.my-domain.com
-* 把PASSWORD替换成邮箱的密码
+* 把MAILGUN_SERVER_NAME,MAILGUN_SERVER_NAME替换成MAILGUN对应配置
 
 ## 文件夹结构：
 
